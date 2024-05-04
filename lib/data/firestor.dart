@@ -21,9 +21,11 @@ class Firestore_Datasource {
     }
   }
 
-  Future<bool> AddNote(String subtitle, String title, int image) async {
+
+
+  Future<bool> AddNote(String subtitle, String title, int image,TimeOfDay selectedTime) async {
     try {
-      var uuid = Uuid().v4();
+      String uuid = Uuid().v4();
       DateTime data = new DateTime.now();
       await _firestore
           .collection('users')
@@ -35,7 +37,7 @@ class Firestore_Datasource {
         'subtitle': subtitle,
         'isDon': false,
         'image': image,
-        'time': '${data.hour}:${data.minute}',
+        'time': '${selectedTime.hour}:${selectedTime.minute}',
         'title': title,
       });
       return true;
@@ -49,6 +51,7 @@ class Firestore_Datasource {
     try {
       final notesList = snapshot.data!.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
+        print(data.toString());
         return Note(
           data['id'],
           data['subtitle'],
@@ -90,7 +93,7 @@ class Firestore_Datasource {
   }
 
   Future<bool> Update_Note(
-      String uuid, int image, String title, String subtitle) async {
+      String uuid, int image, String title, String subtitle , TimeOfDay selectedTime) async {
     try {
       DateTime data = new DateTime.now();
       await _firestore
@@ -99,7 +102,7 @@ class Firestore_Datasource {
           .collection('notes')
           .doc(uuid)
           .update({
-        'time': '${data.hour}:${data.minute}',
+        'time': '${selectedTime.hour}:${selectedTime.minute}',
         'subtitle': subtitle,
         'title': title,
         'image': image,

@@ -14,9 +14,10 @@ class Stream_note extends StatelessWidget {
         stream: Firestore_Datasource().stream(done),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           }
           final noteslist = Firestore_Datasource().getNotes(snapshot);
+
           return ListView.builder(
             shrinkWrap: true,
             itemBuilder: (context, index) {

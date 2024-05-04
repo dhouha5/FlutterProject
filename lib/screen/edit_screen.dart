@@ -14,19 +14,35 @@ class Edit_Screen extends StatefulWidget {
 class _Edit_ScreenState extends State<Edit_Screen> {
   TextEditingController? title;
   TextEditingController? subtitle;
-
+  TimeOfDay? selectedTime;
+  String time = "";
   FocusNode _focusNode1 = FocusNode();
   FocusNode _focusNode2 = FocusNode();
   int indexx = 0;
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
+       time = TextEditingController(text: widget._note.time).text.toString();
+     super.initState();
     title = TextEditingController(text: widget._note.title);
     subtitle = TextEditingController(text: widget._note.subtitle);
   }
 
   Widget build(BuildContext context) {
+    Widget TimeRow(BuildContext context) {
+      return ListTile(
+        tileColor: Colors.transparent,
+        leading: Icon(Icons.access_alarm, color: custom_green), // Icône à gauche du texte
+        title: Text(
+          'Selected Time: ${time}', // Texte affichant l'heure sélectionnée
+          style: TextStyle(fontSize: 16), // Style du texte
+        ),
+        onTap: () {
+          selectTime(context); // Afficher le sélecteur de temps lors du clic sur le ListTile
+        },
+      );
+    }
+
     return Scaffold(
       backgroundColor: backgroundColors,
       body: SafeArea(
@@ -35,7 +51,9 @@ class _Edit_ScreenState extends State<Edit_Screen> {
           children: [
             title_widgets(),
             SizedBox(height: 20),
-            subtite_wedgite(),
+            subtite_widgets(),
+            SizedBox(height: 20),
+            TimeRow(context),
             SizedBox(height: 20),
             imagess(),
             SizedBox(height: 20),
@@ -45,7 +63,6 @@ class _Edit_ScreenState extends State<Edit_Screen> {
       ),
     );
   }
-
   Widget button() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -57,10 +74,10 @@ class _Edit_ScreenState extends State<Edit_Screen> {
           ),
           onPressed: () {
             Firestore_Datasource().Update_Note(
-                widget._note.id, indexx, title!.text, subtitle!.text);
+                widget._note.id, indexx, title!.text, subtitle!.text , selectedTime!.replacing());
             Navigator.pop(context);
           },
-          child: Text('add task'),
+          child: Text('Update task'),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
@@ -117,71 +134,106 @@ class _Edit_ScreenState extends State<Edit_Screen> {
   Widget title_widgets() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: TextField(
-          controller: title,
-          focusNode: _focusNode1,
-          style: TextStyle(fontSize: 18, color: Colors.black),
-          decoration: InputDecoration(
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              hintText: 'title',
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(
-                  color: Color(0xffc5c5c5),
-                  width: 2.0,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Title', // Étiquette pour le champ de saisie de titre
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 8), // Espacement entre l'étiquette et le champ de saisie
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: TextField(
+              controller: title,
+              focusNode: _focusNode1,
+              style: TextStyle(fontSize: 18, color: Colors.black),
+              decoration: InputDecoration(
+                contentPadding:
+                EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                hintText: 'Enter title',
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(
+                    color: Color(0xffc5c5c5),
+                    width: 2.0,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(
+                    color: custom_green,
+                    width: 2.0,
+                  ),
                 ),
               ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(
-                  color: custom_green,
-                  width: 2.0,
-                ),
-              )),
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Padding subtite_wedgite() {
+  Padding subtite_widgets() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: TextField(
-          maxLines: 3,
-          controller: subtitle,
-          focusNode: _focusNode2,
-          style: TextStyle(fontSize: 18, color: Colors.black),
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            hintText: 'subtitle',
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(
-                color: Color(0xffc5c5c5),
-                width: 2.0,
-              ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Subtitle', // Étiquette pour le champ de saisie de sous-titre
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 8), // Espacement entre l'étiquette et le champ de saisie
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
             ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(
-                color: custom_green,
-                width: 2.0,
+            child: TextField(
+              maxLines: 3,
+              controller: subtitle,
+              focusNode: _focusNode2,
+              style: TextStyle(fontSize: 18, color: Colors.black),
+              decoration: InputDecoration(
+                contentPadding:
+                EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                hintText: 'Enter subtitle',
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(
+                    color: Color(0xffc5c5c5),
+                    width: 2.0,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(
+                    color: custom_green,
+                    width: 2.0,
+                  ),
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
+  Future<void> selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+
+    );
+    if (picked != null)
+      setState(() {
+        selectedTime = picked;
+        time=selectedTime!.hour.toString() +":"+ selectedTime!.minute.toString()  ;
+      });
+  }
+
 }
