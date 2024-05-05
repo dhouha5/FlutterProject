@@ -20,9 +20,13 @@ class _Home_ScreenState extends State<Home_Screen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: custom_green,
-        title:Text('ToDo List'),
+        title:Text('ToDo List',
+          style: TextStyle(
+
+              color: Colors.black,
+              fontWeight: FontWeight.bold),),
          actions: [
-           IconButton(onPressed: (){_signOut();}, icon: Icon(Icons.logout,color: Colors.white,)
+           IconButton(onPressed: (){_signOut();}, icon: Icon(Icons.logout,color: Colors.black,)
            )],
       ),
       backgroundColor: backgroundColors,
@@ -66,12 +70,22 @@ class _Home_ScreenState extends State<Home_Screen> {
             physics: BouncingScrollPhysics(),
             child: Column(
               children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    'ToDo',
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey.shade700,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
                 Stream_note(false),
                 Text(
-                  'isDone',
+                  'IsDone',
                   style: TextStyle(
                       fontSize: 16,
-                      color: Colors.grey.shade500,
+                      color: Colors.grey.shade700,
                       fontWeight: FontWeight.bold),
                 ),
                 Stream_note(true),

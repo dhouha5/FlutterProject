@@ -22,6 +22,17 @@ class _Add_screenState extends State<Add_screen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColors,
+      appBar: AppBar(
+        backgroundColor: custom_green,
+        title:Text('Add Task',
+          style: TextStyle(
+
+              color: Colors.black,
+              fontWeight: FontWeight.bold),),
+        actions: [
+          IconButton(onPressed: (){_signOut();}, icon: Icon(Icons.logout,color: Colors.black,)
+          )],
+      ),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -224,4 +235,7 @@ class _Add_screenState extends State<Add_screen> {
         selectedTime = picked;
       });
   }
+}
+Future<void> _signOut() async {
+  await FirebaseAuth.instance.signOut();
 }

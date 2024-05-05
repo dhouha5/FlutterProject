@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_to_do_list/const/colors.dart';
 import 'package:flutter_to_do_list/data/firestor.dart';
@@ -45,6 +46,17 @@ class _Edit_ScreenState extends State<Edit_Screen> {
 
     return Scaffold(
       backgroundColor: backgroundColors,
+      appBar: AppBar(
+        backgroundColor: custom_green,
+        title:Text('Edit Task',
+          style: TextStyle(
+
+              color: Colors.black,
+              fontWeight: FontWeight.bold),),
+        actions: [
+          IconButton(onPressed: (){_signOut();}, icon: Icon(Icons.logout,color: Colors.black,)
+          )],
+      ),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -69,7 +81,7 @@ class _Edit_ScreenState extends State<Edit_Screen> {
       children: [
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            //primary: custom_green,
+            backgroundColor: custom_green,
             minimumSize: Size(170, 48),
           ),
           onPressed: () {
@@ -77,17 +89,17 @@ class _Edit_ScreenState extends State<Edit_Screen> {
                 widget._note.id, indexx, title!.text, subtitle!.text , selectedTime!.replacing());
             Navigator.pop(context);
           },
-          child: Text('Update task'),
+          child: Text('Update task'  ,style: TextStyle(color: Colors.white)),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            //primary: Colors.red,
+            backgroundColor: Colors.red,
             minimumSize: Size(170, 48),
           ),
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('Cancel'),
+          child: Text('Cancel' ,style: TextStyle(color: Colors.white)),
         ),
       ],
     );
@@ -234,6 +246,9 @@ class _Edit_ScreenState extends State<Edit_Screen> {
         selectedTime = picked;
         time=selectedTime!.hour.toString() +":"+ selectedTime!.minute.toString()  ;
       });
+  }
+  Future<void> _signOut() async {
+    await FirebaseAuth.instance.signOut();
   }
 
 }
